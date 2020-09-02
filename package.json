@@ -1,0 +1,22 @@
+{
+  "name": "health-map",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server.js",
+  "proxy": "http://localhost:8080",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "axios": "^0.20.0",
+    "express": "^4.17.1",
+    "nodemon": "^2.0.4"
+  },
+  "dependencies": {
+    "@material-ui/core": "^4.11.0",
+    "mysql": "^2.18.1",
+    "path": "^0.12.7"
+  }
+}
