@@ -1,0 +1,29 @@
+#resultName {
+  padding-top: 8px;
+	grid-column-start: 2;
+	grid-column-end: 3;
+}
+
+  #resultAvatar {
+    padding-right: 5px;
+  }
+
+.result {
+  width: 95%;
+  display: grid;
+  grid-template-columns: 25% 62% 13%;
+  grid-template-rows: 0.2fr 0.2fr;
+  gap: 1px 1px;
+  grid-template-areas: ". . ." ". . .";
+  margin-bottom: 20px;
+}
+
+.distance {
+  text-align: left;
+  grid-column: 3; 
+  padding-top: 8px;
+  padding-right: 5px;
+}
+
+
+

@@ -1,0 +1,21 @@
+.filterMenus {
+	padding-top: 20%;
+	padding-bottom: 5%;
+}
+
+a {
+	font-size: 15px;
+}
+
+.filters {
+  display: inline-block;
+  position: relative;
+  padding-left: 1vw;
+  padding-top: 2vh; 
+  float: left;
+  width: 10vw;
+}
+
+#filterTitle {
+	margin-top: 0px;
+}
