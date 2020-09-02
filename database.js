@@ -3,10 +3,10 @@ const mysql = require('mysql');
 module.exports = {
 	pool: mysql.createPool({
 		connectionLimit: 10,
-		host: "z8dl7f9kwf2g82re.cbetxkdyhwsb.us-east-1.rds.amazonaws.com",
-		user: "mr7q136txktceuc8",
-		password: "a80lgsshnn4w3jkj",
-		database: "hw9gfhlgbkd96zuj",
+		host: "sh4ob67ph9l80v61.cbetxkdyhwsb.us-east-1.rds.amazonaws.com",
+		user: "sntzr8hroxqyfr0j",
+		password: "u77rq4qkpa361vcy",
+		database: "smktyb6nnz6aeuho",
 		multipleStatements: true
 	})
 
