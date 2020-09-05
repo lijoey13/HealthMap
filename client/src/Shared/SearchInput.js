@@ -59,11 +59,13 @@ export default function SearchInput(props) {
         			inputProps={{ 'aria-label': 'search google maps' }}
 					onChange = {handleChangeSearch}
       			/>
+
       				<Divider className={classes.divider} orientation="vertical" />
       				<IconButton type = "submit" className={classes.iconButton} aria-label="search">
        		 			<SearchIcon />
       				</IconButton>
 				</form>
+
     		</Paper>
         </div>
   );

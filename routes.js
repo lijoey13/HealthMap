@@ -7,21 +7,19 @@ const { constructQuery } = require('./query.js');
 
 router.use(express.json());
 
-router.get('/searchClinics/:address', function (req, res) {
-	console.log(req.body);	
-	let geoapi = `https://api.maptiler.com/geocoding/${req.params.address}.json?key=${config.api_key}`
-	console.log(geoapi);
+router.get('/searchClinics/address=:address&distance=:distance', function (req, res) {
+	let geoapi = `https://maps.googleapis.com/maps/api/geocode/json?address=${req.params.address}&key=${process.env.GOOGLE_MAPS_API}`
 	//when I don't have the lat/lng
 	axios.get(geoapi).then(function (response, body) {
 		if (response.status== 200) {
-			let features = response.data.features[0];
-			let geocoord = features.center;		//holding tuple of geocoords
-			let address = features.text + ", " + features.context[0].text;	//building "nearby" text
+			let geocoord = response.data.results[0].geometry.location;		//holding tuple of geocoords
+			let address = response.data.results[0].formatted_address;
 			//TODO
 			//Offensive coding: Make sure we get a "valid response"
 			//Check for inputs, no street address etc., display the numbers correctly by searching for
 			//numbers in the query.
-			let query = constructQuery(geocoord[0], geocoord[1], req.body.filter);
+			console.log(req.params.distance);
+			let query = constructQuery(geocoord.lat, geocoord.lng, req.body.filter, req.params.distance);
 			console.log(query);
 			pool.query(query, function(err, rows) {
 				if (err)
@@ -29,7 +27,8 @@ router.get('/searchClinics/:address', function (req, res) {
 				
 				let re = {
 					rows : rows,
-					geocoord : geocoord
+					geocoord : [geocoord.lng, geocoord.lat],
+					address: address,
 				}
 				console.log(re);
 				res.send(re);				
@@ -40,13 +39,13 @@ router.get('/searchClinics/:address', function (req, res) {
 
 router.post('/filterClinics', function(req, res) {
 	console.log(req.body)
-	let query = constructQuery(req.body.geocoord[0], req.body.geocoord[1], req.body.filter);
+	let query = constructQuery(req.body.geocoord[0], req.body.geocoord[1], req.body.filter, req.body.distance);
 	console.log(query);
 	pool.query(query, function(err, rows) {
 
 		if (err)
 			throw err;
-
+		console.log(rows);
 		let re = {
 			rows: rows
 		}

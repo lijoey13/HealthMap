@@ -3,6 +3,11 @@ import CheckListForm from './CheckListForm.js';
 import Divider from '@material-ui/core/Divider';
 import Slider from '@material-ui/core/Slider';
 import styles from './filterList.module.css';
+import Typography from '@material-ui/core/Typography';
+
+function valuetext(value) {
+  return `${value}°C`;
+}
 
 class FilterList extends React.Component {
 	valuetext(value) {
@@ -34,6 +39,22 @@ class FilterList extends React.Component {
 				<div className= {styles.filters}>
 					<h3 id={styles.filterTitle}> Filters </h3>
 
+					<div className={styles.distance}>
+					 <Typography id="discrete-slider" gutterBottom>
+				        Distance
+				      </Typography>
+				      <Slider
+				        defaultValue={this.props.distance}
+				        getAriaValueText={valuetext}
+				        aria-labelledby="discrete-slider"
+				        valueLabelDisplay="auto"
+				        step={5}
+				        marks
+				        min={5}
+				        max={25}
+				        onChangeCommitted = {this.props.onDistanceChange}
+				      />
+					</div>
 					<div className={styles.filterMenus}>
 						<CheckListForm filterName="Treatment" options={diseases} onChange = {this.props.onChange} 
 						onClick = {this.props.openModal("Treatment")}/>

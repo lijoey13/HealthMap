@@ -5,10 +5,9 @@
 		insurance: [a, b, c],
 		etc.
 **/
-function constructQuery(lat, lng, filters = false) {
+function constructQuery(lng, lat, filters = false, d) {
 	let joins = "";
-	let where = "";
-
+	let where = "WHERE";
 	//find non-empty indices
 	for (let i = 0; i < Object.keys(filters).length; i++) {
 		let key = Object.keys(filters)[i];
@@ -16,35 +15,24 @@ function constructQuery(lat, lng, filters = false) {
 		if (filters[key].length == 0)
 			continue;
 
-		where += ` AND Clinic${key}.${key.toLowerCase()} IN (${filters[key].map(j => `'${j}'`).join(',')})`;
+		where += ` Clinic${key}.${key.toLowerCase()} IN (${filters[key].map(j => `'${j}'`).join(',')}) AND`;
 		joins += `INNER JOIN Clinic${key} ON ClinicCoords.clinic = Clinic${key}.clinic `;	
 	}
 	
+	if (where == "WHERE")
+		where = "";
 
+	where = where.substring(0, where.length - 3);
 
-	let query = `SELECT 
-		    *,
-		    (3959 * ACOS(COS(RADIANS(${lat})) * COS(RADIANS(latitude)) 
-		    * COS(RADIANS(longitude) - RADIANS(${lng})) + SIN(RADIANS(${lat}))
-		    * SIN(RADIANS(latitude)))) AS distance
-		FROM ClinicCoords ` + joins + ` ` + `
-		WHERE MBRContains
-		    (
-		    LineString
-		        (
-		        Point (
-		             ${lng} + 10 / (111.320 * COS(RADIANS(${lat}))),
-		            ${lat} + 10 / 111.133
-		        ),
-		        Point (
-		            ${lng} - 10 / (111.320 * COS(RADIANS(${lat}))),
-		            ${lat} - 10 / 111.133
-		        )
-		    ),
-		    coords
-		    )
-		HAVING distance < 5 `+ where +
-		` ORDER By distance;`
+	let query = `SELECT DISTINCT
+    ClinicCoords.clinic, longitude, latitude,
+    ST_Distance_Sphere(
+        point(${lat}, ${lng}),
+        point(latitude, longitude)
+    ) * .000621371192 AS distance
+FROM ClinicCoords ` + joins + ` ` + where + `
+HAVING distance < ${d} ORDER BY distance;`
+
 		
 	return query;
 }

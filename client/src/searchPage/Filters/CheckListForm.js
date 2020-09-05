@@ -22,9 +22,12 @@ class CheckListForm extends React.Component {
 					{options.map((data, k) => (
 						<FormControlLabel index={data.name + k} 
 						control={<Checkbox id = {this.props.filterName} value={data.name} 
-						onChange = {this.props.onChange} />} label={data.label} onChange = {this.props.onChange} />
+						onChange = {this.props.onChange} />} 
+						label={data.label} 
+						onChange = {this.props.onChange} 
+						style = {{fontSize: 13}}/>
 					))}
-						<FormHelperText onClick = {this.props.onClick} >See all</FormHelperText>
+						<FormHelperText onClick = {this.props.onClick} style={{cursor: "pointer"}}>See all</FormHelperText>
 				</FormGroup>
 		</FormControl>
 			)

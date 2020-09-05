@@ -10,7 +10,7 @@ export default function Logo (props) {
 
 
 	return (
-		<h1 id={props.name} onClick={redirectHome}>
+		<h1 id={props.name} onClick={redirectHome} style={{cursor: "pointer"}}>
 		ClinicLocator
 		</h1>
 	)

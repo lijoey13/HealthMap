@@ -19,14 +19,16 @@ export default function App (props) {
 	const [currentFilter, setCurrentFilter] = useState("");
 	const [visibleBox, setVisibleBox] = useState(-1);
 	const [loading, setIsLoading] = useState(true);
+	const [distance, setDistance] = useState(10);
 
 	
 	useEffect(() => {
 		async function fetchData() {
-			const result = await Axios.get(`../api/searchClinics/${props.match.params.address}`).then( function(response) {
+			const result = await Axios.get(`../api/searchClinics/address=${props.match.params.address}&distance=${distance}`).then( function(response) {
 				setRows(response.data.rows);
 				setGeocoord([...response.data.geocoord]);
 				setIsLoading(false);
+				setAddress(response.data.address);
 			});
 		}
 		fetchData();
@@ -51,15 +53,18 @@ export default function App (props) {
 
 
 	const handleSubmit = (data) => {
-		Axios.get(`../api/searchClinics/${data.address}`).then( function(response) {
+		setIsLoading(true);
+		Axios.get(`../api/searchClinics/address=${data.address}&distance=${distance}`).then( function(response) {
 			setRows(response.data.rows);
 			setGeocoord([...response.data.geocoord]);
-			setAddress(data.address);
+			setAddress(response.data.address);
+			setIsLoading(false);
 		});
 	}
 
 
 	const filterClinic = (event) => {
+		setIsLoading(true);
 		let cloneFilters = {...filters};
 		const category = event.target.id;
 		let filter = cloneFilters[category];
@@ -76,16 +81,28 @@ export default function App (props) {
 		let filterData = {
 			filter: cloneFilters,
 			geocoord: geocoord,
+			distance: distance,
 		}
 
 		
   		Axios.post('/api/filterClinics', filterData).then( function(response) {
 			setRows(response.data.rows);
 			setFilters(cloneFilters);
+			setIsLoading(false);
 		});
 
 	}
 
+	const changeDistance = (event, value) => {
+		console.log(value);
+		setDistance(value);
+		setIsLoading(true);
+		Axios.get(`../api/searchClinics/address=${props.match.params.address}&distance=${value}`).then( function(response) {
+				setRows(response.data.rows);
+				setIsLoading(false);
+			});
+
+	}
 	const singularFilter = (filterName, filter) => {
 		let cloneFilters = {...filters};
 		cloneFilters[filterName] = filter;
@@ -93,15 +110,10 @@ export default function App (props) {
 		let filterData = {
 			filter: cloneFilters,
 			geocoord: geocoord,
+			distance: distance,
 		}
 
 		  Axios.post('/api/filterClinics', filterData).then( function(response) {
-		  	/*
-			that.setState({ rows: response.data.rows,
-							filters: filterObj,
-							isDialogOpen: false,
-							});
-			*/
 			setFilters(cloneFilters);
 			setDialogOpen(false);
 			setRows(response.data.rows);
@@ -132,6 +144,8 @@ export default function App (props) {
 	                	onChange = {filterClinic} 
 	                	openModal = {onOpenModal} 
 	                	isOpen = {isDialogOpen} 
+	                	distance = {distance}
+	                	onDistanceChange = {changeDistance}
                 	/>
 
                     <ResultList 

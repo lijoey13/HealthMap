@@ -56,6 +56,10 @@ function convertHours(hours) {
 	return hr;
 }
 
+function generateDirectionLink(address) {
+	return `https://www.google.com/maps/search/?api=1&query=${address.replace(" ", "+")}`;
+}
+
 function createChecks(data, type) {
 	let checks = [];
 	for (let i = 0; i < data.length; i++)
@@ -64,6 +68,7 @@ function createChecks(data, type) {
 					textName={styles.genericCheckText} />);	
 	return checks;
 }
+
 
 export default function ResultPage (props) {
 	const [data, setData] = useState({});
@@ -78,6 +83,7 @@ export default function ResultPage (props) {
 		}
 		fetchData();
 	}, []);
+
 
 	if (isLoading) {
 		return (
@@ -116,7 +122,7 @@ export default function ResultPage (props) {
 
 					<div className = {styles.bodyHeader}>
 						<h1>{props.match.params.clinic}</h1>
-						<h3 className = {styles.currentHour}>{((data.rows[n].hours != "Closed") ? "Open" : "") + " " + hours[n]}</h3>
+						<h3 className = {styles.currentHour}>{((hours[n] != "Closed") ? "Open" : "") + " " + hours[n]}</h3>
 					</div>
 
 					<div className = {styles.about}>
@@ -159,7 +165,7 @@ export default function ResultPage (props) {
 						</div>
 					</div>
 
-					<SimpleList directions = {"https://google.com"} phone = {data.rows[0].phone} />
+					<SimpleList directions = {generateDirectionLink(data.rows[0].address)} phone = {data.rows[0].phone} />
 				</div>
 			</div>
 		)
