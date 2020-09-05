@@ -8,6 +8,7 @@ import Logo from '../../Shared/Logo.js';
 import styles from './resultPage.module.css';
 import Axios from 'axios';
 import EmptyResultPage from './EmptyResultPage';
+import Loader from 'react-loader-spinner';
 import { withRouter } from 'react-router-dom';
 
 
@@ -58,32 +59,48 @@ function convertHours(hours) {
 function createChecks(data, type) {
 	let checks = [];
 	for (let i = 0; i < data.length; i++)
-		checks.push(<CheckText name="checkIcon" text={data[i][type]}/>);	
+		checks.push(<CheckText name={styles.genericCheck} 
+					text={data[i][type]}
+					textName={styles.genericCheckText} />);	
 	return checks;
 }
 
 export default function ResultPage (props) {
 	const [data, setData] = useState({});
+	const [isLoading, setIsLoading] = useState(true);
 
 	useEffect(() => {
 		async function fetchData() {
 			const result = await Axios.get(`../api/getClinicData/${props.match.params.clinic}`).then( function(response) {
 			setData(response.data);
+			setIsLoading(false);
 			});
 		}
 		fetchData();
 	}, []);
 
-	console.log(data)
-	console.log(!(Object.keys(data).length === 0 && data.constructor === Object));
+	if (isLoading) {
+		return (
+			<div className = {styles.resultContainer}>
+				<div className = {styles.header}>
+					<Logo name={styles.searchLogo} />
+					<SearchInput />
+				</div>
+				<div className = {styles.loaderBody}>
+					<Loader className={styles.loader} type="ThreeDots" color="#00Bff" height={100} width={100} />
+				</div>
+			</div>
+			)
+	}
 	let d = new Date();
 	let n = d.getDay();
 
 	if (!(Object.keys(data).length === 0 && data.constructor === Object) && data["rows"].length > 0) {
 		let hours = convertHours(data.rows);
+		console.log(data);
 		const map = (
-			<Map provider={mapTileProvider} center={[data.lng, data.lat]} zoom={16} dprs={[1, 2]} mouseEvents={false} touchEvents={false} width={250} height = {150}>
-				<Marker anchor={[data.lng, data.lat]} />
+			<Map provider={mapTileProvider} center={[data.rows[0].longitude, data.rows[0].latitude]} zoom={16} dprs={[1, 2]} mouseEvents={false} touchEvents={false} width={250} height = {150}>
+				<Marker anchor={[data.rows[0].longitude, data.rows[0].latitude]} />
 			</Map>
 		);
 

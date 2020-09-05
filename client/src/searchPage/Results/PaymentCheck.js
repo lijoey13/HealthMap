@@ -8,14 +8,15 @@ export default function CheckText (props) {
 		root: {
 			float: 'left'
 		}
+
 	}),
 );
 
 	const classes = useStyles();
 	return (
-		<span className="genericCheck">
+		<div className={props.name}>
 			<CheckIcon className={classes.root}/>
-				<p className="genericCheckText">{props.text}</p>
-		</span>
+				<p className={props.textName}>{props.text}</p>
+		</div>
 	);
 }

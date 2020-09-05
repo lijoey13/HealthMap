@@ -10,7 +10,7 @@ export default function EmptyResultPage (props) {
 			<div className = {styles.header}>
 				<Logo name={styles.searchLogo}/>
 				<SearchInput />
-				<h2>Oops I couldn't find what you're looking for. FOH</h2>
+				<h2>Oops I couldn't find what you're looking for.</h2>
 			</div>			
 		</div>
 	)

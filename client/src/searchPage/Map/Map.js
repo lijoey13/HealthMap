@@ -33,7 +33,6 @@ export default function MapBox(props) {
 				
 	const { rows } = props;	
 	    
-	console.log(props.center);
 	const map = (
 						
   		<Map provider={mapTileProvider} 

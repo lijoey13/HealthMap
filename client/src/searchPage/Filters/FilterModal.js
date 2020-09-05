@@ -117,8 +117,8 @@ export default function FilterModal(props) {
 					</div>
 
 					<div className={styles.buttons}>
-						<button onClick={test}>Search</button>
-						<button onClick={close}>Close</button>
+						<button className={styles.btn} onClick={test}>Search</button>
+						<button className={styles.btn} onClick={close}>Close</button>
 					</div>
 				</div>
 			</div>

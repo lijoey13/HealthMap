@@ -35,3 +35,11 @@
 	margin-top: 0px;
 	padding-left: 40px;
 }
+
+.loader {
+  position: fixed;
+  top: 50%;
+  left: 35%;
+  /* bring your own prefixes */
+  transform: translate(-50%, -50%);
+}

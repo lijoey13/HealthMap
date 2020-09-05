@@ -50,7 +50,7 @@ export default function SearchInput(props) {
 );
   const classes = useStyles();
   return (
-        <div class="searchBar">
+        <div className="searchBar">
     		<Paper id = "titleComponent" className={classes.root} >
         <form className = {classes.root} onSubmit = {handleSubmit}>
       			<InputBase

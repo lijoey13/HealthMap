@@ -43,6 +43,10 @@
 	overflow-y: auto;
 }
 
+.btn {
+	margin-left: 15px;
+}
+
 .buttons {
 	grid-row: 4;
 }

@@ -8,17 +8,17 @@ import FilterModal from './Filters/FilterModal.js';
 import Logo from '../Shared/Logo.js';
 import { withRouter } from 'react-router-dom';
 import Axios from 'axios';
-import qs from 'qs';
 import './styles.css';
 
 export default function App (props) {
 	const [rows, setRows] = useState([]);
 	const [geocoord, setGeocoord] = useState([0, 0]);
-	const [address, setAddress] = useState("");
+	const [address, setAddress] = useState(props.match.params.address);
 	const [filters, setFilters] = useState({Treatment: [], Insurance: [], Language: []});
 	const [isDialogOpen, setDialogOpen] = useState(false);
 	const [currentFilter, setCurrentFilter] = useState("");
 	const [visibleBox, setVisibleBox] = useState(-1);
+	const [loading, setIsLoading] = useState(true);
 
 	
 	useEffect(() => {
@@ -26,9 +26,9 @@ export default function App (props) {
 			const result = await Axios.get(`../api/searchClinics/${props.match.params.address}`).then( function(response) {
 				setRows(response.data.rows);
 				setGeocoord([...response.data.geocoord]);
+				setIsLoading(false);
 			});
 		}
-		setAddress(props.match.params.address);
 		fetchData();
 	}, []);
 
@@ -138,7 +138,8 @@ export default function App (props) {
 	                    rows={rows} 
 	                    enableVisibility={visibleInfoBox} 
 	                    disableVisibility={deactivateInfoBox} 
-	                    address={address} 
+	                    address={address}
+	                    isLoading={loading}
                     />
 
                     <MapBox 
@@ -147,7 +148,6 @@ export default function App (props) {
 	                    cn = {styles.mapBox}
                     /> 
                 </div>
-
             </div>
         );
 }

@@ -31,21 +31,21 @@ class FilterList extends React.Component {
 		
 
 		return (
-				<div class = {styles.filters}>
+				<div className= {styles.filters}>
 					<h3 id={styles.filterTitle}> Filters </h3>
 
-					<div class={styles.filterMenus}>
+					<div className={styles.filterMenus}>
 						<CheckListForm filterName="Treatment" options={diseases} onChange = {this.props.onChange} 
 						onClick = {this.props.openModal("Treatment")}/>
 					</div>
 					
 					<Divider />
-					<div class={styles.filterMenus}>
+					<div className={styles.filterMenus}>
 						<CheckListForm filterName="Insurance" options={insurance} onChange = {this.props.onChange} 
 						onClick = {this.props.openModal("Insurance")} />
 					</div>
 					<Divider />
-					<div class={styles.filterMenus}>
+					<div className={styles.filterMenus}>
 						<CheckListForm filterName="Language" options={languages} onChange = {this.props.onChange} 
 						onClick = {this.props.openModal("Language")} />
 					</div>

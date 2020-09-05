@@ -56,11 +56,12 @@ router.post('/filterClinics', function(req, res) {
 
 router.get('/getClinicData/:clinic', function(req, res) {
 	console.log(req.params);
-	let query1 = `SELECT address, state, city, zipcode, phone, day_of_week, hour_open, hour_close `+ 
-	`FROM ClinicAddress INNER JOIN ClinicHours ON ClinicHours.clinic = ClinicAddress.clinic `+
-	`WHERE ` + 
+	let query1 = `SELECT address, state, city, zipcode, phone, day_of_week, hour_open, hour_close, latitude, longitude`+ 
+	` FROM ClinicAddress INNER JOIN ClinicHours ON ClinicHours.clinic = ClinicAddress.clinic ` +
+	`INNER JOIN ClinicCoords ON ClinicCoords.clinic = ClinicAddress.clinic`+
+	` WHERE ` + 
 	`ClinicHours.clinic = '${req.params.clinic}';`
-	
+	console.log(query1);
 	let query2 = `SELECT treatment from ClinicTreatment WHERE clinic = '${req.params.clinic}';`;
 
 	let query3 = `SELECT language from ClinicLanguage WHERE clinic= '${req.params.clinic}';`;
