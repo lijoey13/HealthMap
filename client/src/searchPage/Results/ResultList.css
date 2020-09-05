@@ -9,7 +9,9 @@
 	white-space: break-spaces;
   }
 
-
+.error {
+	padding-left: 40px;
+}
  .resultList {
  	list-style: none;
  	height: 76%;

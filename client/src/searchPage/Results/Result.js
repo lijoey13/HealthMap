@@ -23,13 +23,7 @@ export default function Result(props) {
 
 	const onClick = () => {
 		let data = {clinic: props.name};
-		Axios.post('./api/getClinicData', data).then( function(response) {
-			history.push({pathname: '/result',
-						  state: {...response.data,
-						  name: props.name,
-						  lat: props.lat,
-						  lng: props.lng}}); 
-		});
+			history.push({pathname: `/result/${props.name}`}); 
 	}
 
 	return (

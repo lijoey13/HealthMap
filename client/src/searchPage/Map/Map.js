@@ -14,7 +14,6 @@ function mapTileProvider (x, y, z, dpr) {
 
 
 export default function MapBox(props) {	
-	console.log(process.env.REACT_APP_API_KEY);
 	let history = useHistory();
 
 	const handleMarkerClick = (event) => {
@@ -34,7 +33,7 @@ export default function MapBox(props) {
 				
 	const { rows } = props;	
 	    
-
+	console.log(props.center);
 	const map = (
 						
   		<Map provider={mapTileProvider} 

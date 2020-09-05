@@ -11,8 +11,8 @@ class RoutingApp extends React.Component {
 			<BrowserRouter>
 				<Switch>
 					<Route path="/home" component = {HomeSearch} />
-					<Route path="/search" component = {App} />
-					<Route path="/result" component = {ResultPage} />
+					<Route path="/search/:address" component = {App} />
+					<Route path="/result/:clinic" component = {ResultPage} />
 					<Route path="/" component = {HomeSearch} />
 				</Switch>
 			</BrowserRouter>

@@ -7,10 +7,10 @@ const { constructQuery } = require('./query.js');
 
 router.use(express.json());
 
-router.post('/searchClinics', function (req, res) {
+router.get('/searchClinics/:address', function (req, res) {
 	console.log(req.body);	
-	let geoapi = `https://api.maptiler.com/geocoding/${req.body.address}.json?key=${config.api_key}`
-
+	let geoapi = `https://api.maptiler.com/geocoding/${req.params.address}.json?key=${config.api_key}`
+	console.log(geoapi);
 	//when I don't have the lat/lng
 	axios.get(geoapi).then(function (response, body) {
 		if (response.status== 200) {
@@ -38,18 +38,34 @@ router.post('/searchClinics', function (req, res) {
 	});
 });
 
-router.post('/getClinicData', function(req, res) {
-	console.log(req.body);
+router.post('/filterClinics', function(req, res) {
+	console.log(req.body)
+	let query = constructQuery(req.body.geocoord[0], req.body.geocoord[1], req.body.filter);
+	console.log(query);
+	pool.query(query, function(err, rows) {
+
+		if (err)
+			throw err;
+
+		let re = {
+			rows: rows
+		}
+		res.send(re);
+	})
+});
+
+router.get('/getClinicData/:clinic', function(req, res) {
+	console.log(req.params);
 	let query1 = `SELECT address, state, city, zipcode, phone, day_of_week, hour_open, hour_close `+ 
 	`FROM ClinicAddress INNER JOIN ClinicHours ON ClinicHours.clinic = ClinicAddress.clinic `+
 	`WHERE ` + 
-	`ClinicHours.clinic = '${req.body.clinic}';`
+	`ClinicHours.clinic = '${req.params.clinic}';`
 	
-	let query2 = `SELECT treatment from ClinicTreatment WHERE clinic = '${req.body.clinic}';`;
+	let query2 = `SELECT treatment from ClinicTreatment WHERE clinic = '${req.params.clinic}';`;
 
-	let query3 = `SELECT language from ClinicLanguage WHERE clinic= '${req.body.clinic}';`;
+	let query3 = `SELECT language from ClinicLanguage WHERE clinic= '${req.params.clinic}';`;
 
-	let query4 = `SELECT insurance from ClinicInsurance WHERE clinic = '${req.body.clinic}';`;
+	let query4 = `SELECT insurance from ClinicInsurance WHERE clinic = '${req.params.clinic}';`;
 	pool.query( query1 +  query2 + query3 + query4, function(err, rows) {
 		if (err)
 			throw err;

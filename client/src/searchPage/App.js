@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import styles from './App.module.css';
-import  MapBox  from './Map/Map.js';
+import MapBox  from './Map/Map.js';
 import ResultList from './Results/ResultList.js';
 import SearchInput from '../Shared/SearchInput.js';
 import FilterList from './Filters/FilterList.js';
@@ -8,64 +8,62 @@ import FilterModal from './Filters/FilterModal.js';
 import Logo from '../Shared/Logo.js';
 import { withRouter } from 'react-router-dom';
 import Axios from 'axios';
+import qs from 'qs';
 import './styles.css';
 
-class App extends React.Component {
-	constructor(props) {
-		super(props);
-		this.state = {
-			rows: this.props.location.state.rows,
-			geocoord: this.props.location.state.geocoord,
-			address: this.props.location.state.address,
-			visibleBox: -1,							//default val
-			filters: {
-					Treatment: [],
-					Insurance: [],
-					Language: []
-			},
-			isDialogOpen: false,
-			currentFilter: "",
+export default function App (props) {
+	const [rows, setRows] = useState([]);
+	const [geocoord, setGeocoord] = useState([0, 0]);
+	const [address, setAddress] = useState("");
+	const [filters, setFilters] = useState({Treatment: [], Insurance: [], Language: []});
+	const [isDialogOpen, setDialogOpen] = useState(false);
+	const [currentFilter, setCurrentFilter] = useState("");
+	const [visibleBox, setVisibleBox] = useState(-1);
+
+	
+	useEffect(() => {
+		async function fetchData() {
+			const result = await Axios.get(`../api/searchClinics/${props.match.params.address}`).then( function(response) {
+				setRows(response.data.rows);
+				setGeocoord([...response.data.geocoord]);
+			});
 		}
-		this.visibleInfoBox = this.visibleInfoBox.bind(this);
-		this.deactivateInfoBox = this.deactivateInfoBox.bind(this);
-		this.onOpenModal = this.onOpenModal.bind(this);
-		this.onClose = this.onClose.bind(this);
+		setAddress(props.match.params.address);
+		fetchData();
+	}, []);
+
+	const onOpenModal = (filterType) => () => {
+		setDialogOpen(true);
+		setCurrentFilter(filterType);
 	}
 
-	onOpenModal = (filterType) => () => {
-		this.setState({ isDialogOpen: true,
-						currentFilter: filterType });
+	const onClose = (e) => {
+		setDialogOpen(false);
 	}
 
-	onClose = (e) => {
-		this.setState({ isDialogOpen: false });
-	}
-
-	visibleInfoBox = (k) => {
-		this.setState({ visibleBox: k }); 
+	const visibleInfoBox = (k) => {
+		setVisibleBox(k);
 	}
 		
-	deactivateInfoBox = (k) => {
-		this.setState({ visibleBox:-1 });
+	const deactivateInfoBox = (k) => {
+		setVisibleBox(-1);
 	}
 
 
-	handleSubmit = (data) => {
-		let self = this;
-		Axios.post('/api/searchClinics', data).then( function(response) {
-			console.log(data.address);
-			self.setState({	rows: response.data.rows,
-							geocoord: response.data.geocoord,
-							address: data.address });
+	const handleSubmit = (data) => {
+		Axios.get(`../api/searchClinics/${data.address}`).then( function(response) {
+			setRows(response.data.rows);
+			setGeocoord([...response.data.geocoord]);
+			setAddress(data.address);
 		});
 	}
 
 
-	filterClinic = (event) => {	
-		const obj = this.state;
+	const filterClinic = (event) => {
+		let cloneFilters = {...filters};
 		const category = event.target.id;
-		let filterObj = Object.assign({}, obj.filters);
-		let filter = filterObj[category];
+		let filter = cloneFilters[category];
+
 		if (event.target.checked) {
 			filter.push(event.target.value);	
 		}
@@ -75,86 +73,85 @@ class App extends React.Component {
 			filter.splice(i, 1)
 		}
 
-		filterObj[category] = filter;
-
 		let filterData = {
-			address: this.props.location.state.address,
-			filter: obj.filters,
+			filter: cloneFilters,
+			geocoord: geocoord,
 		}
 
-		let that = this;
-  		Axios.post('/api/searchClinics', filterData).then( function(response) {
-			that.setState({ rows: response.data.rows,
-							filters: obj.filters});
+		
+  		Axios.post('/api/filterClinics', filterData).then( function(response) {
+			setRows(response.data.rows);
+			setFilters(cloneFilters);
 		});
+
 	}
 
-	singularFilter = (filterName, filter) => {
-		let filterObj = Object.assign({}, this.state.filters);
-		filterObj[filterName] = filter;
+	const singularFilter = (filterName, filter) => {
+		let cloneFilters = {...filters};
+		cloneFilters[filterName] = filter;
+
 		let filterData = {
-			address: this.props.location.state.address,
-			filter: filterObj,
+			filter: cloneFilters,
+			geocoord: geocoord,
 		}
 
-		let that = this;
-		  Axios.post('/api/searchClinics', filterData).then( function(response) {
+		  Axios.post('/api/filterClinics', filterData).then( function(response) {
+		  	/*
 			that.setState({ rows: response.data.rows,
 							filters: filterObj,
 							isDialogOpen: false,
 							});
+			*/
+			setFilters(cloneFilters);
+			setDialogOpen(false);
+			setRows(response.data.rows);
 		});
 	}
 
 
 	
 
-    render () {
         return (
             <div className = {styles.container}>
                 <div className = {styles.header}>
                 	<Logo name={styles.searchLogo} />
-                    <SearchInput handleSubmit = {this.handleSubmit}/>
+                    <SearchInput handleSubmit = {handleSubmit}/>
                 </div>
 
                 <div className = {styles.body}>
 					
 					{/*** modal for filters ***/}
 					<FilterModal 
-						name={this.state.currentFilter} 
-						isOpen = {this.state.isDialogOpen} 
-						onClose = {this.onClose} 
-						onSubmit = {this.singularFilter}
+						name={currentFilter} 
+						isOpen = {isDialogOpen} 
+						onClose = {onClose} 
+						onSubmit = {singularFilter}
 					/>
 
                 	<FilterList 
-	                	onChange = {this.filterClinic} 
-	                	openModal = {this.onOpenModal} 
-	                	isOpen = {this.state.isDialogOpen} 
+	                	onChange = {filterClinic} 
+	                	openModal = {onOpenModal} 
+	                	isOpen = {isDialogOpen} 
                 	/>
 
                     <ResultList 
-	                    rows={this.state.rows} 
-	                    enableVisibility={this.visibleInfoBox} 
-	                    disableVisibility={this.deactivateInfoBox} 
-	                    address={this.state.address} 
-	                    openModal = {this.onOpenClinicModal} 
+	                    rows={rows} 
+	                    enableVisibility={visibleInfoBox} 
+	                    disableVisibility={deactivateInfoBox} 
+	                    address={address} 
                     />
 
                     <MapBox 
-	                    rows={this.state.rows} 
-	                    center = {this.state.geocoord} 
-	                    openModal = {this.onOpenClinicModal} 
+	                    rows={rows} 
+	                    center = {geocoord} 
 	                    cn = {styles.mapBox}
                     /> 
                 </div>
 
             </div>
         );
-    }
 }
 
-export default withRouter(App);
 
 
 

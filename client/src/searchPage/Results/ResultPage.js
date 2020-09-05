@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState }  from 'react';
 import SearchInput from '../../Shared/SearchInput.js';
 import Map from 'pigeon-maps';
 import Marker from 'pigeon-marker';
@@ -6,6 +6,8 @@ import SimpleList from './SideLinks.js';
 import CheckText from './PaymentCheck.js';
 import Logo from '../../Shared/Logo.js';
 import styles from './resultPage.module.css';
+import Axios from 'axios';
+import EmptyResultPage from './EmptyResultPage';
 import { withRouter } from 'react-router-dom';
 
 
@@ -60,104 +62,94 @@ function createChecks(data, type) {
 	return checks;
 }
 
-class ResultPage extends React.Component {
-	constructor(props) {
-		super(props);
-		let loc = props.location.state;
-		let d = new Date();
-		let n = d.getDay();
+export default function ResultPage (props) {
+	const [data, setData] = useState({});
 
-		this.state = {
-			lat: loc.lat,
-			lng: loc.lng,
-			name: loc.name,
-			language: createChecks(loc.language, "language"),
-			insurance: createChecks(loc.insurance, "insurance"),
-			treatment: createChecks(loc.treatment, "treatment"),
-			address: loc.rows[0].address,
-			state: loc.rows[0].state,
-			zipcode: loc.rows[0].zipcode,
-			city: loc.rows[0].city,
-			phone: loc.rows[0].phone,
-			hours: convertHours(loc.rows),
-			currentOpen: loc.rows[n].hour_open,
-			currentClose: loc.rows[n].hour_close,
-			isOpen: (isOpen(loc.rows[n].hour_open, loc.rows[n].hour_close)) ? "Open" : "Close"
+	useEffect(() => {
+		async function fetchData() {
+			const result = await Axios.get(`../api/getClinicData/${props.match.params.clinic}`).then( function(response) {
+			setData(response.data);
+			});
 		}
-	}
+		fetchData();
+	}, []);
 
-	render() {
-		let d = new Date();
-		let n = d.getDay();
+	console.log(data)
+	console.log(!(Object.keys(data).length === 0 && data.constructor === Object));
+	let d = new Date();
+	let n = d.getDay();
 
+	if (!(Object.keys(data).length === 0 && data.constructor === Object) && data["rows"].length > 0) {
+		let hours = convertHours(data.rows);
 		const map = (
-			<Map provider={mapTileProvider} center={[this.state.lng, this.state.lat]} zoom={16} dprs={[1, 2]} mouseEvents={false} touchEvents={false} width={250} height = {150}>
-				<Marker anchor={[this.state.lng, this.state.lat]} />
+			<Map provider={mapTileProvider} center={[data.lng, data.lat]} zoom={16} dprs={[1, 2]} mouseEvents={false} touchEvents={false} width={250} height = {150}>
+				<Marker anchor={[data.lng, data.lat]} />
 			</Map>
-
 		);
 
 		return (
-		<div className = {styles.resultContainer}>
-			<div className = {styles.header}>
-				<Logo name={styles.searchLogo}/>
-				<SearchInput />	
+			<div className = {styles.resultContainer}>
+				<div className = {styles.header}>
+					<Logo name={styles.searchLogo}/>
+					<SearchInput />	
+				</div>
+			
+				<div className = {styles.body}>
+					<div className = {styles.content}>
+
+					<div className = {styles.bodyHeader}>
+						<h1>{props.match.params.clinic}</h1>
+						<h3 className = {styles.currentHour}>{((data.rows[n].hours != "Closed") ? "Open" : "") + " " + hours[n]}</h3>
+					</div>
+
+					<div className = {styles.about}>
+						<h2> About </h2>
+						<p> Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla id sapien iaculis, ornare nisi id, malesuada sapien. Curabitur luctus tincidunt augue, sit amet tincidunt nibh ornare a. Mauris bibendum rhoncus dui non sodales. Integer sit amet magna nec arcu egestas fringilla. Nunc sit amet sem eget tortor hendrerit egestas. Phasellus et dignissim turpis. Maecenas ac porta dui, ac semper ante. Phasellus in augue felis. </p>
+					</div>
+
+					<div className = {styles.locationHours}>
+						<h2> Location and Hours </h2>
+						<div className = {styles.map}>
+							{map}
+							<h5 className = {styles.address}>{data.rows[0].address}<br />  {data.rows[0].city + ", " + data.rows[0].state + " " + data.rows[0].zipcode} </h5>	
+						</div>
+
+						<div className = {styles.hours}>
+							<b className={styles.day1}>Mon</b><div className="hour1">{hours[0]}</div>
+							<b className={styles.day2}>Tue</b><div className="hour2">{hours[1]}</div>
+							<b className={styles.day3}>Wed</b><div className="hour3">{hours[2]}</div>
+							<b className={styles.day4}>Thu</b><div className="hour4">{hours[3]}</div>
+							<b className={styles.day5}>Fri</b><div className="hour5">{hours[4]}</div>
+							<b className={styles.day6}>Sat</b><div className="hour6">{hours[5]}</div>
+							<b className={styles.day7}>Sun</b><div className="hour7">{hours[6]}</div>
+						</div>
+					
+					</div>
+
+						<div className = {styles.ameneties}>
+							<div className = {styles.language}>
+							<h4>Language</h4>
+							{createChecks(data.language, "language")}<br />
+							</div>
+							<div className = {styles.insurance}>
+							<h4>Insurance</h4>
+							{createChecks(data.insurance, "insurance")}<br />
+							</div>
+							<div className = {styles.treatment}>
+							<h4>Treatments</h4>
+							{createChecks(data.treatment, "treatment")}<br />
+							</div>
+						</div>
+					</div>
+
+					<SimpleList directions = {"https://google.com"} phone = {data.rows[0].phone} />
+				</div>
 			</div>
-		
-			<div className = {styles.body}>
-				<div className = {styles.content}>
-
-				<div className = {styles.bodyHeader}>
-					<h1>{this.state.name}</h1>
-					<h3 className = {styles.currentHour}>{((this.state.hours[n] != "Closed") ? "Open" : "") + " " + this.state.hours[n]}</h3>
-				</div>
-
-				<div className = {styles.about}>
-					<h2> About </h2>
-					<p> Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla id sapien iaculis, ornare nisi id, malesuada sapien. Curabitur luctus tincidunt augue, sit amet tincidunt nibh ornare a. Mauris bibendum rhoncus dui non sodales. Integer sit amet magna nec arcu egestas fringilla. Nunc sit amet sem eget tortor hendrerit egestas. Phasellus et dignissim turpis. Maecenas ac porta dui, ac semper ante. Phasellus in augue felis. </p>
-				</div>
-
-				<div className = {styles.locationHours}>
-					<h2> Location and Hours </h2>
-					<div className = {styles.map}>
-						{map}
-						<h5 className = {styles.address}>{this.state.address}<br />  {this.state.city + ", " + this.state.state + " " + this.state.zipcode} </h5>	
-					</div>
-
-					<div className = {styles.hours}>
-						<b className={styles.day1}>Mon</b><div className="hour1">{this.state.hours[0]}</div>
-						<b className={styles.day2}>Tue</b><div className="hour2">{this.state.hours[1]}</div>
-						<b className={styles.day3}>Wed</b><div className="hour3">{this.state.hours[2]}</div>
-						<b className={styles.day4}>Thu</b><div className="hour4">{this.state.hours[3]}</div>
-						<b className={styles.day5}>Fri</b><div className="hour5">{this.state.hours[4]}</div>
-						<b className={styles.day6}>Sat</b><div className="hour6">{this.state.hours[5]}</div>
-						<b className={styles.day7}>Sun</b><div className="hour7">{this.state.hours[6]}</div>
-					</div>
-				
-				</div>
-
-					<div className = {styles.ameneties}>
-						<div className = {styles.language}>
-						<h4>Language</h4>
-						{this.state.language}<br />
-						</div>
-						<div className = {styles.insurance}>
-						<h4>Insurance</h4>
-						{this.state.insurance}<br />
-						</div>
-						<div className = {styles.treatment}>
-						<h4>Treatments</h4>
-						{this.state.treatment}<br />
-						</div>
-					</div>
-				</div>
-
-				<SimpleList directions = {"https://google.com"} phone = {this.state.phone} />
-			</div>
-		</div>
 		)
+}
+	else {
+		return (<EmptyResultPage />);
 	}
-}	
+}
 
-export default withRouter(ResultPage);
 
