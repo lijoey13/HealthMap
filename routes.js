@@ -1,6 +1,5 @@
 const express = require('express');
 const router = express.Router();
-const config = require('./config.json');
 const axios = require('axios');
 const { pool } = require('./database.js');
 const { constructQuery } = require('./query.js');
