@@ -8,6 +8,7 @@ import FilterModal from './Filters/FilterModal.js';
 import Logo from '../Shared/Logo.js';
 import { withRouter } from 'react-router-dom';
 import Axios from 'axios';
+import { useHistory } from 'react-router-dom'
 import './styles.css';
 
 export default function App (props) {
@@ -21,7 +22,7 @@ export default function App (props) {
 	const [loading, setIsLoading] = useState(true);
 	const [distance, setDistance] = useState(10);
 
-	
+	let history = useHistory();
 	useEffect(() => {
 		async function fetchData() {
 			const result = await Axios.get(`../api/searchClinics/address=${props.match.params.address}&distance=${distance}`).then( function(response) {
@@ -53,13 +54,8 @@ export default function App (props) {
 
 
 	const handleSubmit = (data) => {
-		setIsLoading(true);
-		Axios.get(`../api/searchClinics/address=${data.address}&distance=${distance}`).then( function(response) {
-			setRows(response.data.rows);
-			setGeocoord([...response.data.geocoord]);
-			setAddress(response.data.address);
-			setIsLoading(false);
-		});
+		history.push({pathname: `/search/${data.address}`});
+		history.go();
 	}
 
 

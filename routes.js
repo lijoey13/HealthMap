@@ -7,7 +7,7 @@ const { constructQuery } = require('./query.js');
 router.use(express.json());
 
 router.get('/searchClinics/address=:address&distance=:distance', function (req, res) {
-	let geoapi = `https://maps.googleapis.com/maps/api/geocode/json?address=${req.params.address}&key=${process.env.GOOGLE_MAPS_API}`
+	let geoapi = `https://maps.googleapis.com/maps/api/geocode/json?address=${req.params.address}&key=AIzaSyA6I6OOmG_RdZoHm4Mc4_NxiKvGnV0F3_0`
 	//when I don't have the lat/lng
 	axios.get(geoapi).then(function (response, body) {
 		if (response.status== 200) {
@@ -38,7 +38,7 @@ router.get('/searchClinics/address=:address&distance=:distance', function (req, 
 
 router.post('/filterClinics', function(req, res) {
 	console.log(req.body)
-	let query = constructQuery(req.body.geocoord[0], req.body.geocoord[1], req.body.filter, req.body.distance);
+	let query = constructQuery(req.body.geocoord[1], req.body.geocoord[0], req.body.filter, req.body.distance);
 	console.log(query);
 	pool.query(query, function(err, rows) {
 

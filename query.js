@@ -25,13 +25,13 @@ function constructQuery(lng, lat, filters = false, d) {
 	where = where.substring(0, where.length - 3);
 
 	let query = `SELECT DISTINCT
-    ClinicCoords.clinic, longitude, latitude,
-    ST_Distance_Sphere(
-        point(${lat}, ${lng}),
-        point(latitude, longitude)
-    ) * .000621371192 AS distance
-FROM ClinicCoords ` + joins + ` ` + where + `
-HAVING distance < ${d} ORDER BY distance;`
+			    ClinicCoords.clinic, longitude, latitude,
+			    ST_Distance_Sphere(
+			        point(${lat}, ${lng}),
+			        point(latitude, longitude)
+			    ) * .000621371192 AS distance
+				FROM ClinicCoords ` + joins + ` ` + where + `
+				HAVING distance < ${d} ORDER BY distance;`
 
 		
 	return query;
