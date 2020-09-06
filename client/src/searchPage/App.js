@@ -97,7 +97,7 @@ export default function App (props) {
 		console.log(value);
 		setDistance(value);
 		setIsLoading(true);
-		Axios.get(`../api/searchClinics/address=${props.match.params.address}&distance=${value}`).then( function(response) {
+		Axios.get(`../api/searchClinics/address=${address}&distance=${value}`).then( function(response) {
 				setRows(response.data.rows);
 				setIsLoading(false);
 			});
