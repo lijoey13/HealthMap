@@ -7,18 +7,24 @@ import Checkbox from '@material-ui/core/Checkbox';
 import styles from './filterModal.module.css';
 
 let filters = {
-	Treatment: [
-	{label: "Cancer", name: "cancer"},
-	{label: "Flu", name: "flu"},
-	{label: "Cold", name: "cold"},
-	{label: "H1N1", name: "h1n1"},
+	Services: [
+	{label: "Mental Health", name: "cancer"},
+	{label: "Primary Care", name: "flu"},
+	{label: "Immunizations", name: "cold"},
+	{label: "Gastroenterology", name: "h1n1"},
 	{label: "Dental", name: "dental"},
 	{label: "Vision", name: "vision"},
-	{label: "Derm", name: "derm"},
-	{label: "General", name: "general"}
+	{label: "Women’s Health", name: "derm"},
+	{label: "Referrals", name: "general"},
+	{label: "Insurance E.A", name: "general"},
+	{label: "Pharmacy", name: "general"},
+	{label: "Pediatrics", name: "general"},
+	{label: "Pediatrics", name: "general"},
+	{label: "Hypertension Care", name: "general"},
+
 ],
 
-	Insurance: [
+	"Insurance & Payment": [
 	{label: "Private", name: "privateInsurance"},
 	{label: "Flat Fee", name: "flatFee"},
 	{label: "HealthyKids LA", name: "healthtKids"},

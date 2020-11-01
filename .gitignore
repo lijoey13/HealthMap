@@ -26,3 +26,4 @@ yarn-error.log*
 
 #config file
 config.json
+database.js

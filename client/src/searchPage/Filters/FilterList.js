@@ -16,15 +16,15 @@ class FilterList extends React.Component {
 
 	render() {	
 		const diseases = [
-			{ label: "Coronavirus", name: "coronavirus" },
-			{ label: "SARS", name: "sars"},
-			{ label: "Ebola", name: "ebola"}
+			{ label: "Primary Care", name: "primaryCare" },
+			{ label: "Mental Health", name: "mentalHealth"},
+			{ label: "Immunizations", name: "immunizations"}
 		];
 
 		const insurance = [
-			{ label: "MediCare", name: "medicare" },
-			{ label: "MediCal", name: "medical"},
-			{ label: "Medicaid", name: "medicaid"}
+			{ label: "Medicare", name: "medicare" },
+			{ label: "Medi-Cal", name: "medi-cal"},
+			{ label: "My Health LA", name: "mlha"}
 		];
 
 		const languages = [
@@ -56,14 +56,14 @@ class FilterList extends React.Component {
 				      />
 					</div>
 					<div className={styles.filterMenus}>
-						<CheckListForm filterName="Treatment" options={diseases} onChange = {this.props.onChange} 
-						onClick = {this.props.openModal("Treatment")}/>
+						<CheckListForm filterName="Services" options={diseases} onChange = {this.props.onChange} 
+						onClick = {this.props.openModal("Services")}/>
 					</div>
 					
 					<Divider />
 					<div className={styles.filterMenus}>
-						<CheckListForm filterName="Insurance" options={insurance} onChange = {this.props.onChange} 
-						onClick = {this.props.openModal("Insurance")} />
+						<CheckListForm filterName="Insurance & Payment" options={insurance} onChange = {this.props.onChange} 
+						onClick = {this.props.openModal("Insurance & Payment")} />
 					</div>
 					<Divider />
 					<div className={styles.filterMenus}>
