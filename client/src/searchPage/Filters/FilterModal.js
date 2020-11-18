@@ -1,3 +1,5 @@
+//This component is responsible for rendering the "See all" filter modal when pressed.
+
 import React, { useState } from 'react';
 import Modal from 'react-modal';
 import FormControl from '@material-ui/core/FormControl';
@@ -30,7 +32,7 @@ let filters = {
 	{label: "HealthyKids LA", name: "healthtKids"},
 ],
 
-	Language: [
+	Languages: [
 	{ label: "Vietnamese", name: "vietnamese" },
 	{ label: "Korean", name: "korean" },
 	{ label: "Tagalog", name: "tagalog" },
@@ -65,8 +67,10 @@ export default function FilterModal(props) {
 	const [selectedFilter, setFilter] = useState([]);
 	const [currentFilter, setCurrent] = useState([]);
 
+	/* handles selecting/unselecting filters by checkboxes, appends or removes from currentFilter */
 	const onChange = (event) => {
 		let tFilter = [...selectedFilter];
+
 		if (!tFilter.includes(event.target.value)) {
 			tFilter.push(event.target.value);	
 		}
@@ -84,12 +88,14 @@ export default function FilterModal(props) {
 		props.onSubmit(props.name, selectedFilter)
 	}
 
+	/* closes the modal */
 	const close = () => {
 		setFilter(currentFilter);
 		props.onClose();
 	}
 
 	let form;
+	
 	if (props.name != "") {
 		form = filters[props.name].map((data, k) => (
 									<FormControlLabel index={data.name + k} 

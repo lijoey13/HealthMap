@@ -1,3 +1,5 @@
+//Contains routing logic for front end
+
 import React from 'react';
 import App from './searchPage/App.js';
 import HomeSearch from './homePage/HomeSearch.js';

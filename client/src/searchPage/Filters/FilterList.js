@@ -1,78 +1,86 @@
-import React from 'react';
+/* 
+This component is the sidebar component of the search page
+	Children:
+		Filter lists
+		Distance slider
+*/
+
+import React, { useState }  from 'react';
 import CheckListForm from './CheckListForm.js';
 import Divider from '@material-ui/core/Divider';
 import Slider from '@material-ui/core/Slider';
 import styles from './filterList.module.css';
 import Typography from '@material-ui/core/Typography';
+import Select from '@material-ui/core/Select';
+import MenuItem from '@material-ui/core/MenuItem';
 
-function valuetext(value) {
-  return `${value}°C`;
+
+//is there a better way to do this rather than hardcoding??
+const options = {
+	"Services" : [
+		{ label: "Primary Care", name: "primaryCare" },
+		{ label: "Mental Health", name: "mentalHealth"},
+		{ label: "Immunizations", name: "immunizations"}
+	],
+	"Insurance & Payment" : [
+		{ label: "Medicare", name: "medicare" },
+		{ label: "Medi-Cal", name: "medi-cal"},
+		{ label: "My Health LA", name: "mlha"}
+	],
+	"Languages" : [
+		{ label: "English", name: "english" },
+		{ label: "Cantonese", name: "cantonese" },
+		{ label: "Mandarin", name: "mandarin" },
+	]
+
 }
 
-class FilterList extends React.Component {
-	valuetext(value) {
-	  return `${value}°C`;
+let distances = [];
+for (let i = 5; i <= 25; i += 5) {
+	distances.push(<MenuItem value={i}>{i} miles</MenuItem>);
+}
+
+export default function FilterList (props) {
+	const [distance, setDistance] = useState(props.distance);
+
+	{/*** Creating the check list of filters} ***/}
+	let filters = [];
+	for (const key of Object.keys(options)) {
+		filters.push(
+			<div className = {styles.filterMenus}>
+			<CheckListForm filterName = {key} 
+					   options = {options[key]} 
+					   onChange = {props.onChange}
+					   onClick = {props.openModal(key)}		   
+			/>
+			<Divider />
+			</div>
+		);
 	}
+	{/*** finish creating checklist of filters ***/}
 
-	render() {	
-		const diseases = [
-			{ label: "Primary Care", name: "primaryCare" },
-			{ label: "Mental Health", name: "mentalHealth"},
-			{ label: "Immunizations", name: "immunizations"}
-		];
 
-		const insurance = [
-			{ label: "Medicare", name: "medicare" },
-			{ label: "Medi-Cal", name: "medi-cal"},
-			{ label: "My Health LA", name: "mlha"}
-		];
-
-		const languages = [
-			{ label: "English", name: "english" },
-			{ label: "Cantonese", name: "cantonese" },
-			{ label: "Mandarin", name: "mandarin" },
-		];
-		
-		
-
-		return (
-				<div className= {styles.filters}>
-					<h3 id={styles.filterTitle}> Filters </h3>
-
-					<div className={styles.distance}>
-					 <Typography id="discrete-slider" gutterBottom>
+	return (
+		<div className = {styles.filters}>	
+			<h3 id = {styles.filterTitle}>Filters</h3>
+				{/*** distance selection begin ***/}
+				<div className={styles.distance}>
+					<Typography id="discrete-slider" gutterBottom>
 				        Distance
-				      </Typography>
-				      <Slider
-				        defaultValue={this.props.distance}
-				        getAriaValueText={valuetext}
-				        aria-labelledby="discrete-slider"
-				        valueLabelDisplay="auto"
-				        step={5}
-				        marks
-				        min={5}
-				        max={25}
-				        onChangeCommitted = {this.props.onDistanceChange}
-				      />
+				     </Typography>
+
+					<Select value={distance}
+							onChange={props.onDistanceChange}>
+						{distances}
+					</Select>
 					</div>
-					<div className={styles.filterMenus}>
-						<CheckListForm filterName="Services" options={diseases} onChange = {this.props.onChange} 
-						onClick = {this.props.openModal("Services")}/>
-					</div>
-					
-					<Divider />
-					<div className={styles.filterMenus}>
-						<CheckListForm filterName="Insurance & Payment" options={insurance} onChange = {this.props.onChange} 
-						onClick = {this.props.openModal("Insurance & Payment")} />
-					</div>
-					<Divider />
-					<div className={styles.filterMenus}>
-						<CheckListForm filterName="Language" options={languages} onChange = {this.props.onChange} 
-						onClick = {this.props.openModal("Language")} />
-					</div>
-				</div>
-			);
-	}
+				{/*** end distance selection ***/}
+
+				{/*** rest of the filters ***/}
+					{filters}	
+				{/*** end rest of filters ***/}
+		</div>
+	)	
 }
 
-export default FilterList;
+

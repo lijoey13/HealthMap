@@ -1,3 +1,5 @@
+//This component is the search page, basically the parent component to everything on that page
+
 import React, { useState, useEffect } from 'react';
 import styles from './App.module.css';
 import MapBox  from './Map/Map.js';
@@ -15,7 +17,7 @@ export default function App (props) {
 	const [rows, setRows] = useState([]);
 	const [geocoord, setGeocoord] = useState([0, 0]);
 	const [address, setAddress] = useState(props.match.params.address);
-	const [filters, setFilters] = useState({Treatment: [], Insurance: [], Language: []});
+	const [filters, setFilters] = useState({"Services": [], "Insurance & Payment": [], "Languages": []});
 	const [isDialogOpen, setDialogOpen] = useState(false);
 	const [currentFilter, setCurrentFilter] = useState("");
 	const [visibleBox, setVisibleBox] = useState(-1);
@@ -35,11 +37,15 @@ export default function App (props) {
 		fetchData();
 	}, []);
 
+	//Function to open modal of some filter (The see all filters)
 	const onOpenModal = (filterType) => () => {
 		setDialogOpen(true);
 		setCurrentFilter(filterType);
 	}
 
+	/*
+		Function to close modal of some filter (The see all filter)
+	*/
 	const onClose = (e) => {
 		setDialogOpen(false);
 	}
@@ -52,13 +58,17 @@ export default function App (props) {
 		setVisibleBox(-1);
 	}
 
-
+	/*
+		Function handles searching of an address and reloads the page
+	*/
 	const handleSubmit = (data) => {
 		history.push({pathname: `/search/${data.address}`});
 		history.go();
 	}
 
-
+	/*
+		Function applies filters and refreshes the clinics on the page
+	*/
 	const filterClinic = (event) => {
 		setIsLoading(true);
 		let cloneFilters = {...filters};
@@ -89,8 +99,11 @@ export default function App (props) {
 
 	}
 
-	const changeDistance = (event, value) => {
-		console.log(value);
+	/*
+		Function handles the change of distance and refreshes clinics on the page
+	*/
+	const changeDistance = (event) => {
+		let value = event.target.value;
 		setDistance(value);
 		setIsLoading(true);
 		Axios.get(`../api/searchClinics/address=${address}&distance=${value}`).then( function(response) {
@@ -99,6 +112,10 @@ export default function App (props) {
 			});
 
 	}
+
+	/*
+		
+	*/
 	const singularFilter = (filterName, filter) => {
 		let cloneFilters = {...filters};
 		cloneFilters[filterName] = filter;
@@ -117,8 +134,6 @@ export default function App (props) {
 	}
 
 
-	
-
         return (
             <div className = {styles.container}>
                 <div className = {styles.header}>
@@ -136,6 +151,7 @@ export default function App (props) {
 						onSubmit = {singularFilter}
 					/>
 
+				{/*** component that shows all the filters on the side ***/}
                 	<FilterList 
 	                	onChange = {filterClinic} 
 	                	openModal = {onOpenModal} 
@@ -144,6 +160,7 @@ export default function App (props) {
 	                	onDistanceChange = {changeDistance}
                 	/>
 
+                {/*** Component that holds the scrollable selection of clinics ***/}
                     <ResultList 
 	                    rows={rows} 
 	                    enableVisibility={visibleInfoBox} 
@@ -152,6 +169,7 @@ export default function App (props) {
 	                    isLoading={loading}
                     />
 
+                {/*** component that holds the map ***/}
                     <MapBox 
 	                    rows={rows} 
 	                    center = {geocoord} 

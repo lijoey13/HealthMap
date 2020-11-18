@@ -1,3 +1,5 @@
+//Contains database credentials for the pooled connection
+
 const mysql = require('mysql');
 
 module.exports = {

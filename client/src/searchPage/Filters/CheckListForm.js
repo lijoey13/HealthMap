@@ -1,3 +1,5 @@
+//This component is a side bar filter for one category
+
 import React from 'react';
 import FormLabel from '@material-ui/core/FormLabel';
 import FormControl from '@material-ui/core/FormControl';
