@@ -38,29 +38,30 @@ Run the queries in `create_tables.sql` to create the database and tables.
 
 4. Update api keys
 
-Create a `config.json` with the following contents
+Create a `.env` file in the root directory with the following contents
 
 ```
-{
-	"api_key": map_tiler_api_key
-}
+GOOGLE_MAPS_API=KEY
+DB_HOST=HOST
+DB_USER=USER
+DB_PASSWORD=PASSWORD
+DB=DB_NAME
 ```
 
-Then create a `.env` file with the following contents
+Then create a `.env` in the client directory with the following contents
 
 ```
-REACT_APP_API_KEY = map_tiler_api_key
+REACT_APP_MAPTILER_KEY = map_tiler_api_key
 ```
 
 Replacing `map_tiler_api_key` with your own API key from maptiler.
 
 5. Starting the App
 
-Run the two commands on separate windows
+Run this command
 
 ```
-npm start
-npx nodemon server.js
+npm run dev
 ```
 
 ## License
