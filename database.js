@@ -1,14 +1,15 @@
 //Contains database credentials for the pooled connection
 
 const mysql = require('mysql');
+require('dotenv').config()
 
 module.exports = {
 	pool: mysql.createPool({
 		connectionLimit: 10,
-		host: "sh4ob67ph9l80v61.cbetxkdyhwsb.us-east-1.rds.amazonaws.com",
-		user: "sntzr8hroxqyfr0j",
-		password: "u77rq4qkpa361vcy",
-		database: "smktyb6nnz6aeuho",
+		host: process.env.DB_HOST,
+		user: process.env.DB_USER,
+		password: process.env.DB_PASSWORD,
+		database: process.env.DB,
 		multipleStatements: true
 	})
 
