@@ -14,25 +14,27 @@ class CheckListForm extends React.Component {
 	handleClick() {
 		console.log("Clicked");
 	}
+
 	render() {
-		const options = this.props.options;
-		return (
+	    const options = this.props.options;
+	    return (
 
 		<FormControl component="fieldset">
-			<FormLabel component="legend">{this.props.filterName}</FormLabel>
-				<FormGroup>
-					{options.map((data, k) => (
-						<FormControlLabel index={data.name + k} 
-						control={<Checkbox id = {this.props.filterName} value={data.name} 
-						onChange = {this.props.onChange} />} 
+		    <FormLabel component="legend">{this.props.filterName}</FormLabel>
+			<FormGroup>
+			    {options.map((data, k) => (
+				<FormControlLabel 
+                                    index={data.name + k} 
+				    control={<Checkbox id = {this.props.filterName} value={data.name} 
+				    onChange = {this.props.onChange} />} 
 						label={data.label} 
 						onChange = {this.props.onChange} 
 						style = {{fontSize: 13}}/>
 					))}
-						<FormHelperText onClick = {this.props.onClick} style={{cursor: "pointer"}}>See all</FormHelperText>
-				</FormGroup>
+				<FormHelperText onClick = {this.props.onClick} style={{cursor: "pointer"}}>See all</FormHelperText>
+			</FormGroup>
 		</FormControl>
-			)
+	        )
 	}
 }
 

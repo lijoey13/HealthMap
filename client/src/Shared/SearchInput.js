@@ -25,37 +25,46 @@ export default function SearchInput(props) {
   
 
 	const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    root: {
-      padding: '2px 4px',
-	     display: 'flex',
-      alignItems: 'center',
-      width: 600,
-    },
+            createStyles({
+            root: {
+            padding: '2px 4px',
+	    display: 'flex',
+            alignItems: 'center',
+            width: 600,
+            },
 
-    input: {
-      marginLeft: theme.spacing(1),
-      flex: 1,
-    },
+            input: {
+                marginLeft: theme.spacing(1),
+                flex: 1,
+            },
 
-    iconButton: {
-      padding: 10,
-    },
+            iconButton: {
+                padding: 10,
+            },
 
-    divider: {
-      height: 28,
-      margin: 4,
-    },
-  }),
-);
-  const classes = useStyles();
-  return (
-        <div className="searchBar">
-    		<Paper id = "titleComponent" className={classes.root} >
-        <form className = {classes.root} onSubmit = {handleSubmit}>
+            divider: {
+                height: 28,
+                margin: 4,
+            },
+        }),
+        );
+
+        const classes = useStyles();
+        return (
+            <div className="searchBar">
+    	    	<Paper id = "titleComponent" className={classes.root} >
+                    <form className = {classes.root} onSubmit = {handleSubmit}>
       			<InputBase
        				 className={classes.input}
            	    	placeholder="Type in your address here"
+        			inputProps={{ 'aria-label': 'search google maps' }}
+					onChange = {handleChangeSearch}
+      			/>
+                        Near
+                        <Divider className={classes.divider} orientation="vertical" />
+                        <InputBase
+       				 className={classes.input}
+           	    	placeholder="Zipcode or City"
         			inputProps={{ 'aria-label': 'search google maps' }}
 					onChange = {handleChangeSearch}
       			/>

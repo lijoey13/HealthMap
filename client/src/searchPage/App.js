@@ -8,6 +8,7 @@ import SearchInput from '../Shared/SearchInput.js';
 import FilterList from './Filters/FilterList.js';
 import FilterModal from './Filters/FilterModal.js';
 import Logo from '../Shared/Logo.js';
+import useMediaQuery from '@material-ui/core/useMediaQuery';
 import { withRouter } from 'react-router-dom';
 import Axios from 'axios';
 import { useHistory } from 'react-router-dom'
@@ -24,6 +25,9 @@ export default function App (props) {
 	const [loading, setIsLoading] = useState(true);
 	const [distance, setDistance] = useState(10);
 
+        //media query stuff
+        const isSmall = useMediaQuery('(min-width:600px)');
+        console.log(!isSmall);
 	let history = useHistory();
 	useEffect(() => {
 		async function fetchData() {
@@ -143,37 +147,38 @@ export default function App (props) {
 
                 <div className = {styles.body}>
 					
-					{/*** modal for filters ***/}
-					<FilterModal 
-						name={currentFilter} 
-						isOpen = {isDialogOpen} 
-						onClose = {onClose} 
-						onSubmit = {singularFilter}
-					/>
+		    {/*** modal for filters ***/}
+		    <FilterModal 
+			name={currentFilter} 
+			isOpen = {isDialogOpen} 
+			onClose = {onClose} 
+			onSubmit = {singularFilter}
+		    />
 
-				{/*** component that shows all the filters on the side ***/}
-                	<FilterList 
-	                	onChange = {filterClinic} 
-	                	openModal = {onOpenModal} 
-	                	isOpen = {isDialogOpen} 
-	                	distance = {distance}
-	                	onDistanceChange = {changeDistance}
-                	/>
+		    {/*** component that shows all the filters on the side ***/}
+                    <FilterList 
+                        isOpen = {isSmall}
+	                onChange = {filterClinic} 
+	                openModal = {onOpenModal} 
+	                isOpen = {isDialogOpen} 
+	                distance = {distance}
+	                onDistanceChange = {changeDistance}
+                    />
 
-                {/*** Component that holds the scrollable selection of clinics ***/}
+                    {/*** Component that holds the scrollable selection of clinics ***/}
                     <ResultList 
-	                    rows={rows} 
-	                    enableVisibility={visibleInfoBox} 
-	                    disableVisibility={deactivateInfoBox} 
-	                    address={address}
-	                    isLoading={loading}
+	                rows={rows} 
+	                enableVisibility={visibleInfoBox} 
+	                disableVisibility={deactivateInfoBox} 
+	                address={address}
+	                isLoading={loading}
                     />
 
                 {/*** component that holds the map ***/}
                     <MapBox 
-	                    rows={rows} 
-	                    center = {geocoord} 
-	                    cn = {styles.mapBox}
+	                rows={rows} 
+	                center = {geocoord} 
+	                cn = {styles.mapBox}
                     /> 
                 </div>
             </div>

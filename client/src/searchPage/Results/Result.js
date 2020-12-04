@@ -12,26 +12,26 @@ export default function Result(props) {
 	const [shadow, setShadow] = React.useState(0.3);
 
 	const handleMouseOver = (e) => {
-		props.enableVisibility(props.index);
-		setShadow(2);
+	    props.enableVisibility(props.index);
+	    setShadow(2);
 	}
 
 	const handleMouseLeave =(e) => {
-		props.disableVisibility(props.index);
-		setShadow(0.3);
+	    props.disableVisibility(props.index);
+	    setShadow(0.3);
 	}
 
 	const onClick = () => {
-		let data = {clinic: props.name};
-			history.push({pathname: `/result/${props.name}`}); 
+	    let data = {clinic: props.name};
+		        history.push({pathname: `/result/${props.name}`}); 
 	}
 
 	return (
-		<Paper className="result" variant="outlined" onMouseOver={handleMouseOver} 
-		onMouseOut={handleMouseLeave} onClick = {onClick} elevation={shadow}>
-			<ResultAvatar id="avatar" />
-			<p className="resultData" id="resultName">{(props.index + 1) + ". " + props.name}</p>
-			<p className="distance">{Math.round(props.distance * 100) / 100 + " mi"}</p>
-		</Paper>
+	    <Paper className="result" variant="outlined" onMouseOver={handleMouseOver} 
+		   onMouseOut={handleMouseLeave} onClick = {onClick} elevation={shadow}>
+		    <ResultAvatar id="avatar" />
+		    <p className="resultData" id="resultName">{(props.index + 1) + ". " + props.name}</p>
+		    <p className="distance">{Math.round(props.distance * 100) / 100 + " mi"}</p>
+	    </Paper>
 	);
 }

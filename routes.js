@@ -3,12 +3,12 @@ const router = express.Router();
 const axios = require('axios');
 const { pool } = require('./database.js');
 const { constructQuery } = require('./query.js');
+require('dotenv').config()
 
 router.use(express.json());
-
 router.get('/searchClinics/address=:address&distance=:distance', function (req, res) {
-	let geoapi = `https://maps.googleapis.com/maps/api/geocode/json?address=${req.params.address}&key=${process.env.GOOGLE_MAPS_API}`
-	//when I don't have the lat/lng
+	let geoapi = `https://maps.googleapis.com/maps/api/geocode/json?address=${req.params.address}&key=${process.env.GOOGLE_MAPS_API}`;
+
 	axios.get(geoapi).then(function (response, body) {
 		if (response.status== 200) {
 			let geocoord = response.data.results[0].geometry.location;		//holding tuple of geocoords
@@ -22,12 +22,12 @@ router.get('/searchClinics/address=:address&distance=:distance', function (req, 
 			console.log(query);
 			pool.query(query, function(err, rows) {
 				if (err)
-					throw err;
+				    throw err;
 				
 				let re = {
-					rows : rows,
-					geocoord : [geocoord.lng, geocoord.lat],
-					address: address,
+				    rows : rows,
+				    geocoord : [geocoord.lng, geocoord.lat],
+				    address: address,
 				}
 				console.log(re);
 				res.send(re);				

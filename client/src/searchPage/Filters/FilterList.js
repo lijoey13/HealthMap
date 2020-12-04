@@ -42,16 +42,15 @@ for (let i = 5; i <= 25; i += 5) {
 
 export default function FilterList (props) {
 	const [distance, setDistance] = useState(props.distance);
-
 	{/*** Creating the check list of filters} ***/}
 	let filters = [];
 	for (const key of Object.keys(options)) {
 		filters.push(
 			<div className = {styles.filterMenus}>
 			<CheckListForm filterName = {key} 
-					   options = {options[key]} 
-					   onChange = {props.onChange}
-					   onClick = {props.openModal(key)}		   
+				       options = {options[key]} 
+				       onChange = {props.onChange}
+				       onClick = {props.openModal(key)}		   
 			/>
 			<Divider />
 			</div>
@@ -62,23 +61,23 @@ export default function FilterList (props) {
 
 	return (
 		<div className = {styles.filters}>	
-			<h3 id = {styles.filterTitle}>Filters</h3>
-				{/*** distance selection begin ***/}
-				<div className={styles.distance}>
-					<Typography id="discrete-slider" gutterBottom>
-				        Distance
-				     </Typography>
+		    <h3 id = {styles.filterTitle}>Filters</h3>
+			{/*** distance selection begin ***/}
+			<div className={styles.distance}>
+			    <Typography id="discrete-slider" gutterBottom>
+			        Distance
+			    </Typography>
 
-					<Select value={distance}
-							onChange={props.onDistanceChange}>
-						{distances}
-					</Select>
-					</div>
-				{/*** end distance selection ***/}
+			    <Select value={distance}
+				    onChange={props.onDistanceChange}>
+				    {distances}
+			    </Select>
+			</div>
+			{/*** end distance selection ***/}
 
-				{/*** rest of the filters ***/}
-					{filters}	
-				{/*** end rest of filters ***/}
+			{/*** rest of the filters ***/}
+			{filters}	
+			{/*** end rest of filters ***/}
 		</div>
 	)	
 }

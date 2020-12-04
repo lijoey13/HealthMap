@@ -5,6 +5,7 @@ import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
 import { useHistory } from 'react-router-dom'
 import Logo from '../Shared/Logo.js';
 import styles from './homeSearch.module.css';
+
 export default function HomeSearch() {
 
 	const useStyles = makeStyles({
@@ -17,7 +18,6 @@ export default function HomeSearch() {
 
 	let history = useHistory();
 	const handleSubmit = (data) => {
-		console.log(data);
 		history.push({pathname: `/search/${data.address}`});
 	}
 

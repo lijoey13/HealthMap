@@ -9,13 +9,14 @@ import { useHistory } from 'react-router-dom';
 
 
 function mapTileProvider (x, y, z, dpr) {
-  return `https://api.maptiler.com/maps/streets/256/${z}/${x}/${y}${dpr >= 2 ? '@2x' : ''}.png?key=0qXe9fatH9TgwZzcuFgC`;
+  return `https://api.maptiler.com/maps/streets/256/${z}/${x}/${y}${dpr >= 2 ? '@2x' : ''}.png?key=${process.env.REACT_APP_MAPTILER_KEY}`;
 }
 
 
 export default function MapBox(props) {	
 	let history = useHistory();
 
+        //this doesn't work....
 	const handleMarkerClick = (event) => {
 		/*
 		console.log(props.rows[payload]);
@@ -47,23 +48,21 @@ export default function MapBox(props) {
 				/>
 
 			{rows.map((data, k) => {
-					return( 
-						<CenterMarker
-							anchor={[data.longitude, data.latitude]}
-							name={data.clinic}
-							img={ClinicMarker}
-							width={25}
-							height={40}
-							onClick = {handleMarkerClick}
-							/>
-						)
-				})}
+			    return( 
+			        <CenterMarker
+				    anchor={[data.longitude, data.latitude]}
+				    name={data.clinic}
+				    img={ClinicMarker}
+				    width={25}
+				    height={40}
+				    onClick = {handleMarkerClick}
+				/>
+				)
+			})}
 				
-			</Map>
+		</Map>
 		)
 	
-        return (<div className={props.cn}>
-				{map}
-				</div>);
+        return (<div className={props.cn}>{map}</div>);
     }
 

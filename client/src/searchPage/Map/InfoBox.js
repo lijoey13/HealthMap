@@ -1,5 +1,6 @@
-import React from 'react';
+//Not using this for now...
 
+import React from 'react';
 
 class InfoBox extends React.Component {
 

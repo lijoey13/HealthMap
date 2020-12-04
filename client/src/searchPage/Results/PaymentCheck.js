@@ -5,18 +5,17 @@ import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
 export default function CheckText (props) {
 	const useStyles = makeStyles((theme: Theme) =>
 	createStyles({
-		root: {
-			float: 'left'
-		}
-
+	    root: {
+	        float: 'left'
+	    }
 	}),
 );
 
 	const classes = useStyles();
 	return (
-		<div className={props.name}>
-			<CheckIcon className={classes.root}/>
-				<p className={props.textName}>{props.text}</p>
-		</div>
+	    <div className={props.name}>
+		<CheckIcon className={classes.root}/>
+		    <p className={props.textName}>{props.text}</p>
+	    </div>
 	);
 }
