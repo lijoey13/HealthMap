@@ -6,6 +6,7 @@ const { constructQuery } = require('./query.js');
 require('dotenv').config()
 
 router.use(express.json());
+
 router.get('/searchClinics/address=:address&distance=:distance', function (req, res) {
 	let geoapi = `https://maps.googleapis.com/maps/api/geocode/json?address=${req.params.address}&key=${process.env.GOOGLE_MAPS_API}`;
 

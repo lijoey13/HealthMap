@@ -1,6 +1,5 @@
 import React from 'react';
 import SearchInput from '../Shared/SearchInput.js';
-import Axios from 'axios';
 import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
 import { useHistory } from 'react-router-dom'
 import Logo from '../Shared/Logo.js';
