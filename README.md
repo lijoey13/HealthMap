@@ -31,6 +31,11 @@ Navigate to the project directory and run the following
 ```
 npm install
 ```
+Then navigate to the client directory and run the following
+```
+cd client
+npm install
+```
 
 3. Create database
 
