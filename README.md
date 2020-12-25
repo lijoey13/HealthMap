@@ -21,7 +21,7 @@ A step by step series of examples that tell you how to get a development env run
 Navigate to the file directory you want to store the project in
 
 ```
-git clone https://github.com/dchung21/react_test.git
+git clone https://github.com/dchung21/HealthMap.git
 ```
 
 2. Install dependencies
