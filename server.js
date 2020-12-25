@@ -56,11 +56,14 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 app.post('/login', 
-  passport.authenticate('local', { failureRedirect: '/' }),
+  passport.authenticate('local', { failureRedirect: '/fail' }),
   function(req, res) {
-	  console.log("Logging in");
+	  res.send(true);
   });
 
+app.get('/fail', function(req, res) {
+	res.send(false);
+})
 
 if (process.env.NODE_ENV === 'production') {
 	app.use(express.static('client/build'));

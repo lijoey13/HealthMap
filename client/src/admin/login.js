@@ -1,9 +1,10 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Input from '@material-ui/core/Input';
 import Button from '@material-ui/core/Button';
 import Axios from 'axios';
 
 export default function Login() {
+    const [failedLogin, setLogin] = useState(false);
 
     const handleSubmit = (e) => {
         e.preventDefault();
@@ -16,6 +17,10 @@ export default function Login() {
 
         Axios.post("./login", data).then(function(response) {
             console.log(response);
+            if (response.data)
+                console.log("Logged in successfully"); //prob will just redirect...
+            else
+                setLogin(true);
         });
     }
 
