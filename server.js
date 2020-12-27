@@ -5,7 +5,7 @@ const app = express();
 const routes = require('./routes.js');
 const passport = require('passport');
 const Strategy = require('passport-local').Strategy;
-const db = require('./db');
+const { pool } = require('./database.js');
 
 app.use(express.json());
 app.use(express.static(__dirname + '/src'));
@@ -20,12 +20,14 @@ app.use('/api', routes);
 // will be set at `req.user` in route handlers after authentication.
 passport.use(new Strategy(
     function(username, password, cb) {
-      db.users.findByUsername(username, function(err, user) {
-        if (err) { return cb(err); }
-        if (!user) { return cb(null, false); }
-        if (user.password != password) { return cb(null, false); }
-        return cb(null, user);
-      });
+       pool.query("SELECT * FROM USERS WHERE username=?", [username], function(err, rows) {
+            if (err)
+                return cb(err);
+            if (!rows.length || password != rows[0].password)
+                return cb(null, false);
+
+            return cb(null, rows[0]);
+        })
     }));
   
   
@@ -41,9 +43,8 @@ passport.use(new Strategy(
   });
   
   passport.deserializeUser(function(id, cb) {
-    db.users.findById(id, function (err, user) {
-      if (err) { return cb(err); }
-      cb(null, user);
+    pool.query("SELECT * FROM USERS WHERE id = ? ", [id], function(err, rows) {
+        cb(err, rows[0]);
     });
   });
 
@@ -65,6 +66,20 @@ app.get('/fail', function(req, res) {
 	res.send(false);
 })
 
+app.get('/testing', isLoggedIn, function(req, res) {
+    res.send("logged in");
+});
+
+function isLoggedIn(req, res, next) {
+    if (req.isAuthenticated()) {
+        console.log("logged in");
+        return next();
+    }
+
+    console.log("not logged in");
+    res.send("not logged in");
+}
+
 if (process.env.NODE_ENV === 'production') {
 	app.use(express.static('client/build'));
 	app.get('*', (req, res) => {
@@ -73,3 +88,4 @@ if (process.env.NODE_ENV === 'production') {
 }
 
 app.listen(process.env.PORT || '8080', () => console.log('Server is running on port 8080'))
+

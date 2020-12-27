@@ -24,13 +24,24 @@ export default function Login() {
         });
     }
 
+    const test = (e) => {
+        Axios.get("./testing").then(function(response) {
+            console.log(response);
+        })
+    }
+
     return(
-        <form onSubmit = {handleSubmit}>
+        <div>
+            <form onSubmit = {handleSubmit}>
             <Input id="username" placeholder = "Username"/>
             <Input id="password" placeholder = "Password"/>
             <Button type = "submit" variant = "contained" color = "primary">
                 Login     
             </Button>
         </form>
+        <Button onClick = {test}> Check if Logged in </Button>
+
+        </div>
+        
     );
 }
