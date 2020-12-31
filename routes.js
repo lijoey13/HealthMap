@@ -81,5 +81,17 @@ router.get('/getClinicData/:clinic', function(req, res) {
 	})
 });	
 
+//get endpoint, for all clinics
+router.get("/getData", function(req, res) {
+	let query = "SELECT clinic FROM ClinicAddresses;"
+
+	pool.query(query, function(err, rows) {
+		if (err) 
+			throw err;
+
+		console.log(rows);
+		res.send(rows);
+	});
+});
 
 module.exports = router;

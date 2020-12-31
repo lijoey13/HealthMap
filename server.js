@@ -5,12 +5,15 @@ const app = express();
 const routes = require('./routes.js');
 const passport = require('passport');
 const Strategy = require('passport-local').Strategy;
+const bcrypt = require("bcrypt")
 const { pool } = require('./database.js');
+const { doesNotMatch } = require('assert');
 
 app.use(express.json());
 app.use(express.static(__dirname + '/src'));
 app.use('/api', routes);
 
+const saltRounds = 10;
 
 // Configure the local strategy for use by Passport.
 //
@@ -23,10 +26,26 @@ passport.use(new Strategy(
        pool.query("SELECT * FROM USERS WHERE username=?", [username], function(err, rows) {
             if (err)
                 return cb(err);
-            if (!rows.length || password != rows[0].password)
-                return cb(null, false);
 
-            return cb(null, rows[0]);
+            if (!rows.length) 
+                return cb(null, false);
+            /*
+            bcrypt.hash(password, saltRounds, function(err, hash) {
+                console.log("updating");
+                pool.query(`UPDATE USERS SET password="${hash}";`, function(err, row) {
+                    console.log(err);
+                });
+            });
+            */
+
+            bcrypt.compare(password, rows[0].password, function(err, result) {
+                //if result is false, invalid password
+                if (!result)
+                    return cb(null, false);
+
+                    
+                return cb(null, rows[0]);
+            });
         })
     }));
   
